@@ -25,6 +25,7 @@ class MidiChannel < ApplicationCable::Channel
     # type:,
     limit: nil,
     seek: nil,
+    upTo: nil,
     **misc
   )
     p params
@@ -37,6 +38,7 @@ class MidiChannel < ApplicationCable::Channel
 
     track['notes']
       .then(&intercept_if(seek)  { |notes| notes.drop_while { |n| n['time'] <= seek } })
+      .then(&intercept_if(upTo)  { |notes| notes.take_while { |n| n['time'] <= upTo } })
       .then(&intercept_if(limit) { |notes| notes.first(limit) })
       .each { |note| broadcast(type: 'note', value: note) }
       .tap { |notes| p notes.first }

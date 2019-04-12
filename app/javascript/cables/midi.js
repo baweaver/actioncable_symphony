@@ -28,10 +28,10 @@ export default class MidiChannel {
     this.callbacks[`on${capitalize(event)}`] = fn;
   }
 
-  attachToInstrument({ seek, limit }) {
+  attachToInstrument({ seek, limit, upTo }) {
     console.log('attaching')
     this.noteQueue = [];
-    this.channel.attach({ seek, limit });
+    this.channel.attach({ seek, limit, upTo });
 
     if (this.callbacks.onInstrument) {
       this.callbacks.onInstrument(this.instrument);
@@ -73,14 +73,14 @@ export default class MidiChannel {
         }
       },
 
-      attach({ seek, limit }) {
+      attach({ seek, limit, upTo }) {
         klass.seek = seek || 0;
 
         console.log({
-          attachment: true, type: klass.instrument, seek, limit
+          attachment: true, type: klass.instrument, seek, limit, upTo
         });
 
-        const result = this.perform('attach', { seek, limit });
+        const result = this.perform('attach', { seek, limit, upTo });
 
         console.log({ result });
 

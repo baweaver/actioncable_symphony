@@ -1,0 +1,16 @@
+{
+  "name": "actioncable_symphony",
+  "private": true,
+  "dependencies": {
+    "@rails/webpacker": "3.5",
+    "actioncable": "^5.2.2-1",
+    "bulma": "0.7.4",
+    "jquery": "",
+    "ramda": "0.26.1",
+    "timesync": "",
+    "tone": "13.7.5"
+  },
+  "devDependencies": {
+    "webpack-dev-server": "2.11.2"
+  }
+}

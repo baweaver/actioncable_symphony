@@ -16,7 +16,7 @@ export default class Clock {
   }
 
   now() {
-    return new Date(this.syncronizer.now())
+    return new Date(this.syncronizer.now());
   }
 
   offset() {

@@ -4,8 +4,8 @@ function timedOut (maxWait) {
   return () => Date.now() - startTime > maxWait;
 }
 
-export function waitUntilTime(timestamp, action) {
-  const arrivalTime = timestamp - Date.now();
+export function waitUntilTime(timestamp, clock, action) {
+  const arrivalTime = timestamp - clock.now();
 
   setTimeout(action, arrivalTime);
 }

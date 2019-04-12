@@ -101,7 +101,7 @@ export default class MidiChannel {
 
     this.player.createSynthFromNotes(this.noteQueue);
 
-    waitUntilTime(atTime, () => this.player.start());
+    waitUntilTime(atTime, this.clock, () => this.player.start());
   }
 
   stop() {

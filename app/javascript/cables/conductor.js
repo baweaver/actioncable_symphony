@@ -57,7 +57,7 @@ export default class ConductorChannel {
 
             // Bind to instrument
             return klass.midiChannel.connect({ type: message }).then(() => {
-              klass.midiChannel.attachToInstrument({ seek: 0, upTo: 45 /*, limit: 45*/ });
+              klass.midiChannel.attachToInstrument({ seek: 0, upTo: 60 /*, limit: 45*/ });
             });
           case 'all_assignments':
             if (!universal) return false;

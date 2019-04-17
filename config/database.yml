@@ -23,4 +23,4 @@ test:
 production:
   <<: *default
   adapter: pg
-  url: <%= ENV.fetch("DATABASE_URL") %>
+  url: <%= ENV.fetch("DATABASE_URL", "db/acs") %>

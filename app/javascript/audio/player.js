@@ -1,4 +1,5 @@
 import Tone from 'tone';
+import R from 'ramda';
 
 const DEBUG = true;
 
@@ -9,66 +10,29 @@ function debugLog(str) {
 
 export default class Player {
   constructor() {
-    this.synths = [];
-    this.soloSynth = null;
+    this.synth = this.createSynth();
   }
 
-  playSong(song, until, track) {
-    this.loadSong(song, until, track).then(this.start);
-  }
-
-  playNote({name, duration, time, velocity}, currentOffset) {
-    this.soloSynth = this.soloSynth || this.createSynth();
-    currentOffset  = currentOffset || 0;
-
-    this.soloSynth.triggerAttackRelease(name, duration, time, velocity);
-  }
-
-  loadSong(song, until, track) {
-    song  = song  || 'beethoven_6th_midi';
-    until = until || 60;
-
-    return $.get('ze_song', { song, until }).then(song => {
-      debugLog(`Start Loading @ ${Tone.now()}`);
-
-      song.tracks.forEach(track => {
-        debugLog(`  Loading ${track.name} @ ${Tone.now()}`);
-        this.createSynthFromTrack(track);
-        debugLog(`    ${track.name} Loaded @ ${Tone.now()}`);
-      });
-
-      debugLog(`Done Loading @ ${Tone.now()}`);
-    });
+  playNote({name, duration, time, velocity}) {
+    this.synth.triggerAttackRelease(name, duration, time, velocity);
   }
 
   createSynth() {
-    return new Tone.PolySynth(10, Tone.Synth, {
+    return new Tone.Synth({
       envelope: {
-        attack: 0.02,
-        decay: 0.1,
+        attack: 0.03,
+        decay: 0.25,
         sustain: 0.3,
-        release: 1
+        release: 0.5
       }
     }).toMaster();
   }
 
-  createSynthFromTrack(track) {
-    const synth = this.createSynth();
-    this.synths.push(synth);
-
-    synth.sync();
-
-    track.notes.forEach(({ name, duration, time, velocity }) => {
-      synth.triggerAttackRelease(name, duration, time, velocity);
-    });
-  }
-
   createSynthFromNotes(notes) {
-    const synth = this.createSynth();
-    synth.sync();
+    this.synth.sync();
 
     notes.forEach(({ name, duration, time, velocity }) => {
-      synth.triggerAttackRelease(name, duration, time, velocity);
+      this.synth.triggerAttackRelease(name, duration, time, velocity);
     });
   }
 
@@ -76,10 +40,13 @@ export default class Player {
     return Tone.Transport.start();
   }
 
-  stop() {
+  stop(atTime) {
+    this.synth.unsync();
+    this.synth.dispose();
+
     Tone.Transport.cancel();
     Tone.Transport.stop();
-    this.synths.forEach(synth => synth.releaseAll());
-    if (this.soloSynth) this.soloSynth.releaseAll();
+
+    this.synth = this.createSynth();
   }
 }

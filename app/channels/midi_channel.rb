@@ -16,7 +16,6 @@ class MidiChannel < ApplicationCable::Channel
   end
 
   def attach(message)
-    p message
     broadcast_song(message.symbolize_keys)
   end
 
@@ -28,12 +27,7 @@ class MidiChannel < ApplicationCable::Channel
     upTo: nil,
     **misc
   )
-    p params
-
     track = midi['tracks'].find { |track| track['name'] == params[:type] }
-
-    p track['name']
-
     return false unless track
 
     track['notes']
@@ -41,7 +35,6 @@ class MidiChannel < ApplicationCable::Channel
       .then(&intercept_if(upTo)  { |notes| notes.take_while { |n| n['time'] <= upTo } })
       .then(&intercept_if(limit) { |notes| notes.first(limit) })
       .each { |note| broadcast(type: 'note', value: note) }
-      .tap { |notes| p notes.first }
   end
 
   private def intercept_if(cond, &fn)

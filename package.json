@@ -4,9 +4,13 @@
   "dependencies": {
     "@rails/webpacker": "3.5",
     "actioncable": "^5.2.2-1",
+    "babel-preset-react": "^6.24.1",
     "bulma": "0.7.4",
     "jquery": "",
+    "prop-types": "^15.7.2",
     "ramda": "0.26.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "timesync": "",
     "tone": "13.7.5"
   },

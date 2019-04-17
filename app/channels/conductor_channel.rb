@@ -55,7 +55,7 @@ class ConductorChannel < ApplicationCable::Channel
       broadcast(
         channel_name: channel_name_for(uuid),
         type: 'play',
-        value: DateTime.now.strftime('%Q').to_i + 10_000
+        value: DateTime.now.strftime('%Q').to_i + 3_000
       )
     }
   end

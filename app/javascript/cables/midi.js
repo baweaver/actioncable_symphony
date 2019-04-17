@@ -2,6 +2,8 @@
 // import createChannel from "cables/actioncable";
 
 import cable from 'actioncable';
+import Player from 'audio/player';
+
 import { waitUntilConnected, waitUntilTime } from 'util/async_tools';
 import Clock from 'timesync/clock';
 
@@ -10,18 +12,11 @@ function capitalize(string) {
 }
 
 export default class MidiChannel {
-  constructor(player) {
-    console.log('Creating')
-    this.consumer = cable.createConsumer();
+  constructor() {
+    this.consumer  = cable.createConsumer();
     this.noteQueue = [];
-    this.player = player;
+    this.player    = new Player();
     this.callbacks = [];
-    // this.clock = new Clock({
-    //   onChange(offset) {
-    //     this.offset = offset;
-    //     console.log(`changed offset: ${offset} ms`);
-    //   }
-    // });
   }
 
   on(event, fn) {
@@ -99,12 +94,20 @@ export default class MidiChannel {
     console.log(this.noteQueue);
     console.log({ clock: this.clock });
 
+    if (!this.noteQueue.length) {
+      this.noteQueue   = [...this.cachedNotes];
+      this.cachedNotes = [];
+    }
+
     this.player.createSynthFromNotes(this.noteQueue);
 
     waitUntilTime(atTime, this.clock, () => this.player.start());
   }
 
   stop() {
+    this.cachedNotes = [...this.noteQueue];
+    this.noteQueue   = [];
+
     this.player.stop();
   }
 

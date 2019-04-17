@@ -5,7 +5,7 @@ export default class Clock {
   constructor({ onChange = x => x }) {
     this.syncronizer = timesync.create({
       server: '/timesync',
-      interval: 5000
+      interval: 10000
     });
 
     this.syncronizer.on('change', onChange.bind(this));

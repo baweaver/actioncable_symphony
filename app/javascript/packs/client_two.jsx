@@ -8,9 +8,17 @@ import MidiChannel from 'cables/midi';
 import ConductorChannel from 'cables/conductor';
 
 import { InstrumentCard } from 'instruments/instrument_card';
-import { Connection } from 'client/connection';
+import { ClockDisplay } from 'timesync/clock_display';
 
-const midiChannel               = new MidiChannel();
+import { Clock } from 'timesync/clock';
+
+const clock = new Clock({
+  onChange(offset) {
+    this.offset = offset;
+  }
+});
+
+const midiChannel               = new MidiChannel(clock);
 const directConductorChannel    = new ConductorChannel(midiChannel);
 const universalConductorChannel = new ConductorChannel(midiChannel);
 
@@ -22,16 +30,15 @@ class Client extends React.Component {
       isConnecting:   false,
       isConnected:    false,
       myUuid:         uuid(),
-      instrumentName: null
+      instrumentName: null,
+      clock:          clock
     };
-
-    midiChannel.on('instrument', (instrumentName) => {
-      this.setState({ instrumentName });
-    });
   }
 
   componentDidMount() {
-
+    midiChannel.on('instrument', (instrumentName) => {
+      this.setState({ instrumentName });
+    });
   }
 
   handleConnectClick = () => {
@@ -63,6 +70,8 @@ class Client extends React.Component {
           instrumentName={this.state.instrumentName}
           midiChannel={midiChannel}
         />
+
+        <ClockDisplay clock={clock} />
       </div>
      );
   }

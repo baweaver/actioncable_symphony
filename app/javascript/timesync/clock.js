@@ -1,25 +1,31 @@
 // import timesync from 'timesync';
 const timesync = require('timesync');
 
-export default class Clock {
+export class Clock {
   constructor({ onChange = x => x }) {
+    this.onChange = onChange.bind(this);
+    this.active   = false;
+    this.offset   = 0;
+  }
+
+  start() {
     this.syncronizer = timesync.create({
       server: '/timesync',
       interval: 10000
     });
 
-    this.syncronizer.on('change', onChange.bind(this));
-  }
+    this.syncronizer.on('change', this.onChange.bind(this));
 
-  onChange(fn) {
-    this.syncronizer.on('change', fn);
+    this.active = true;
   }
 
   now() {
+    if (!this.active) return;
+
     return new Date(this.syncronizer.now());
   }
 
-  offset() {
+  currentOffset() {
     return this.offset || 0;
   }
 }

@@ -1,5 +1,4 @@
 import Tone from 'tone';
-import R from 'ramda';
 
 const DEBUG = true;
 

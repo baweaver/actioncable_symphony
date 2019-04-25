@@ -17,21 +17,12 @@ export default class TonePlayer {
   }
 
   createSynth() {
-    // return new Tone.Synth({
-    //   envelope: {
-    //     attack: 0.03,
-    //     decay: 0.25,
-    //     sustain: 0.3,
-    //     release: 0.5
-    //   }
-    // }).toMaster();
-
-    return new Tone.PolySynth(10, Tone.Synth, {
+    return new Tone.Synth({
       envelope: {
-        attack: 0.02,
-        decay: 0.1,
+        attack: 0.03,
+        decay: 0.25,
         sustain: 0.3,
-        release: 1
+        release: 0.5
       }
     }).toMaster();
   }

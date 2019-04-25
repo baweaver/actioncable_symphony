@@ -6,6 +6,12 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <!-- Style dependencies -->
+    <link href="https://unpkg.com/normalize.css@^7.0.0" rel="stylesheet" />
+    <!-- Blueprint stylesheets -->
+    <link href="https://unpkg.com/@blueprintjs/icons@^3.4.0/lib/css/blueprint-icons.css" rel="stylesheet" />
+    <link href="https://unpkg.com/@blueprintjs/core@^3.10.0/lib/css/blueprint.css" rel="stylesheet" />
+
     <%= javascript_pack_tag 'application' %>
     <% "stylesheet_pack_tag 'application'" %>
   </head>
@@ -13,8 +19,6 @@
   <body>
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>
-
-    <h1>Testing</h1>
 
     <%= yield %>
   </body>

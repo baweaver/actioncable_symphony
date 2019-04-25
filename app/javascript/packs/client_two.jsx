@@ -4,13 +4,16 @@ import PropTypes from 'prop-types'
 
 import { uuid } from 'util/uuid'
 
-import MidiChannel from 'cables/midi';
-import ConductorChannel from 'cables/conductor';
+import ConductorChannel from 'cables/conductor_channel';
+import PlayerChannel from 'cables/player_channel';
 
 import { InstrumentCard } from 'instruments/instrument_card';
-import { ClockDisplay } from 'timesync/clock_display';
 
 import { Clock } from 'timesync/clock';
+
+import { Button, Icon, Navbar, Alignment, Colors } from "@blueprintjs/core";
+
+const myUuid = uuid();
 
 const clock = new Clock({
   onChange(offset) {
@@ -18,13 +21,16 @@ const clock = new Clock({
   }
 });
 
-const midiChannel               = new MidiChannel(clock);
-const directConductorChannel    = new ConductorChannel(midiChannel);
-const universalConductorChannel = new ConductorChannel(midiChannel);
-
 class Client extends React.Component {
   constructor() {
     super();
+
+    // this.conductorChannel = new ConductorChannel();
+    this.playerChannel    = new PlayerChannel({
+      uuid:         myUuid,
+      clock:        clock,
+      onInstrument: instrumentName => this.setState({ instrumentName })
+    });
 
     this.state = {
       isConnecting:   false,
@@ -36,9 +42,7 @@ class Client extends React.Component {
   }
 
   componentDidMount() {
-    midiChannel.on('instrument', (instrumentName) => {
-      this.setState({ instrumentName });
-    });
+
   }
 
   handleConnectClick = () => {
@@ -47,8 +51,8 @@ class Client extends React.Component {
     this.setState({ isConnecting: true });
 
     return Promise.all([
-      directConductorChannel.connect({ uuid: this.state.myUuid }),
-      universalConductorChannel.connect({ uuid: null, universal: true })
+      // this.conductorChannel.connect(),
+      this.playerChannel.connect()
     ]).then(() => {
       this.setState({
         isConnecting: false,
@@ -57,21 +61,52 @@ class Client extends React.Component {
     })
   }
 
+  subscriptionStatus() {
+    if (this.state.isConnecting) return 'warning';
+    if (this.state.isConnected)  return 'success';
+
+    return 'danger';
+  }
+
   render() {
     return (
       <div className="client">
-        {!this.state.isConnected && <button onClick={this.handleConnectClick}>
-          Connect
-        </button>}
+        <h1 className="bp3-heading">
+          ActionCable Symphony Client &nbsp;
+        </h1>
 
-        {this.state.isConnected && 'Connected!'}
+        <div>
+          {!this.state.isConnected &&
+            <Button onClick={this.handleConnectClick}
+              intent="primary"
+              loading={this.state.isConnecting}
+              icon="feed"
+              large={true}
+              fill={true}
+            >
+              Connect
+            </Button>
+          }
+
+          {this.state.isConnected &&
+            <Button
+              intent="success"
+              disabled="disabled"
+              icon="feed-subscribed"
+              large={true}
+              fill={true}
+            >
+              Connected
+            </Button>
+          }
+        </div>
 
         <InstrumentCard
           instrumentName={this.state.instrumentName}
-          midiChannel={midiChannel}
+          clock={clock}
         />
 
-        <ClockDisplay clock={clock} />
+        <div>{this.state.myUuid}</div>
       </div>
      );
   }

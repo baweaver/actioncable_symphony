@@ -1,5 +1,8 @@
 import React from 'react'
 import moment from 'moment';
+
+import { Colors } from "@blueprintjs/core";
+
 import { cond, always, is, equals, T } from 'ramda';
 
 const absBetween = (x, y) => (n) => {
@@ -11,13 +14,13 @@ const absBetween = (x, y) => (n) => {
 };
 
 const offsetColor = cond([
-  [absBetween(0, 0.5),   always('green')],
-  [absBetween(0.5, 1.5), always('yellow')],
+  [absBetween(0, 0.5),   always(Colors.GREEN2)],
+  [absBetween(0.5, 1.5), always(Colors.GOLD3)],
 
   // Nothing assigned yet
-  [equals('n/a'), always('light grey')],
+  [equals('n/a'), always(Colors.GRAY3)],
 
-  [T, always('red')]
+  [T, always(Colors.RED3)]
 ])
 
 export class ClockDisplay extends React.Component {
@@ -26,11 +29,10 @@ export class ClockDisplay extends React.Component {
     this.clock = clock;
 
     this.state = {
+      realClock: 'n/a',
       now:    'n/a',
       offset: 'n/a'
     }
-
-    console.log('Clock up');
   }
 
   componentDidMount() {
@@ -40,33 +42,49 @@ export class ClockDisplay extends React.Component {
       if (!this.clock.active) return;
 
       this.setState({
-        now:    moment(this.clock.now()).format('hh:mm:ss.SSSS'),
-        offset: this.clock.currentOffset().toFixed(4)
+        realClock: moment(Date.now()).format('hh:mm:ss'),
+        now:       moment(this.clock.now()).format('hh:mm:ss'),
+        offset:    this.clock.currentOffset().toFixed(2)
       });
     }, 1000);
+  }
+
+  clockDisplay() {
+    return `${this.state.realClock} + ${this.state.offset} ms`
   }
 
   render() {
     const backgroundColor = offsetColor(this.state.offset);
 
-    console.log(backgroundColor)
+    return (<div style={{
+      color: Colors.LIGHT_GRAY5,
+      backgroundColor: backgroundColor,
+      fontSize: '2.5em',
+      padding: '15px'
+    }}>
+      <strong>Clock</strong>: &nbsp;
 
-    return (
-      <table border="1" style={{ backgroundColor }}>
-        <thead>
-          <tr>
-            <td width="75%">Current Time</td>
-            <td width="25%">Current Offset</td>
-          </tr>
-        </thead>
+      {!this.clock.active && 'Awaiting Assignment'}
 
-        <tbody>
-          <tr>
-            <td>{this.state.now}</td>
-            <td>{this.state.offset} ms</td>
-          </tr>
-        </tbody>
-      </table>
-    );
+      {this.clock.active && this.clockDisplay()}
+    </div>);
+
+    // return (
+    //   <table border="1" style={{ backgroundColor }}>
+    //     <thead>
+    //       <tr>
+    //         <td width="75%">Current Time</td>
+    //         <td width="25%">Current Offset</td>
+    //       </tr>
+    //     </thead>
+
+    //     <tbody>
+    //       <tr>
+    //         <td>{this.state.now}</td>
+    //         <td>{this.state.offset} ms</td>
+    //       </tr>
+    //     </tbody>
+    //   </table>
+    // );
   }
 }

@@ -1,27 +1,30 @@
 class ConnectedList
   REDIS_KEY = 'connected_nodes'
 
-  def self.redis
-    @redis ||= ::Redis.new(url: ActionCableConfig[:url])
-  end
+  # That there's a blasted race condition here is highly annoying. For
+  # whatever reason initializers like to lag on creation and if a websocket
+  # gets in _before_ that happens to be, well, initialized things go boom.
+  sleep 1 until ActionCableConfig[:url]
+
+  REDIS = ::Redis.new(url: ActionCableConfig[:url])
 
   def self.all
-    redis.smembers(REDIS_KEY)
+    REDIS.smembers(REDIS_KEY)
   end
 
   def self.clear_all
-    redis.del(REDIS_KEY)
+    REDIS.del(REDIS_KEY)
   end
 
   def self.add(uid)
-    redis.sadd(REDIS_KEY, uid)
+    REDIS.sadd(REDIS_KEY, uid)
   end
 
   def self.include?(uid)
-    redis.sismember(REDIS_KEY, uid)
+    REDIS.sismember(REDIS_KEY, uid)
   end
 
   def self.remove(uid)
-    redis.srem(REDIS_KEY, uid)
+    REDIS.srem(REDIS_KEY, uid)
   end
 end

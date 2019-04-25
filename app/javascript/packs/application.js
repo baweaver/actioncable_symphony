@@ -7,87 +7,38 @@
 // To reference this file, add <%= javascript_pack_tag 'application' %> to the appropriate
 // layout file, like app/views/layouts/application.html.erb
 
-import Player from 'audio/player';
-import MidiChannel from 'cables/midi';
-import ConductorChannel from 'cables/conductor';
+// Style
+// import '@blueprintjs/icons/lib/css/blueprint-icons.css';
+// import '@blueprintjs/core/lib/css/blueprint.css';
+import 'styles/application.sass';
 
-function uuid() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-};
+import ConductorChannel from 'cables/conductor_channel';
 
-// Hack for testing
-const instrumentSeeks = {
-  "Flauti I II": 38,
-  "Oboi I II": 30,
-  "Clarinetti in B I II": 30,
-  "Fagotti I II": 20,
-  "Corno I in F": 13,
-  "Corno II in F": 13,
-  "Violino I": 0,
-  "Violino II": 0,
-  "Viola": 0 ,
-  "Violoncello": 0,
-  "Contrabasso": 10,
-};
 
 $(function () {
-  console.log('IN')
-
-  // const myUuid = uuid();
-
-  // let $play = document.querySelector('#play');
-  // let $stop = document.querySelector('#stop');
-
-  // let $requestInstrument = document.querySelector('#instrument');
-  // let $conductorAssign = document.querySelector('#conductorAssign');
-  // let $instrumentSelect = document.querySelector('#instruments');
   let $universalAssign = document.querySelector('#universalAssign');
-  let $universalPlay = document.querySelector('#universalPlay');
-  let $universalStop = document.querySelector('#universalStop');
+  let $universalBuffer = document.querySelector('#universalBuffer');
+  let $universalPlay   = document.querySelector('#universalPlay');
+  let $universalStop   = document.querySelector('#universalStop');
 
   if (!$universalAssign || !$universalPlay) return;
 
-  const player = new Player();
-
-  const midiChannel = new MidiChannel(player);
-  // const directConductorChannel = new ConductorChannel(midiChannel);
-  const universalConductorChannel = new ConductorChannel(midiChannel);
-
-  // directConductorChannel.connect({ uuid: myUuid });
-  universalConductorChannel.connect({ uuid: null, universal: true });
-
-  // For whatever reason `this` doesn't bind properly unless it's given
-  // through an arrow function like this.
-  // $play.addEventListener('click', () => player.playSong());
-  // $play.addEventListener('click', () => midiChannel.play());
-  // $stop.addEventListener('click', () => player.stop());
-
-  // $conductorAssign.addEventListener('click', () => {
-  //   directConductorChannel.assignInstrument();
-  // });
+  const conductorChannel = new ConductorChannel();
+  conductorChannel.connect();
 
   $universalAssign.addEventListener('click', () => {
-    console.log('ok ok')
-    universalConductorChannel.channel.universalAssignments();
+    conductorChannel.channel.assignInstruments();
+  });
+
+  $universalBuffer.addEventListener('click', () => {
+    conductorChannel.channel.bufferMusic();
   });
 
   $universalPlay.addEventListener('click', () => {
-    universalConductorChannel.channel.universalPlay();
+    conductorChannel.channel.play();
   });
 
   $universalStop.addEventListener('click', () => {
-    universalConductorChannel.channel.universalStop();
+    conductorChannel.channel.stop();
   });
-
-  // $requestInstrument.addEventListener('click', () => {
-  //   const type = $instrumentSelect.options[$instrumentSelect.selectedIndex].value;
-  //   const seek = instrumentSeeks[type];
-
-  //   console.log({ type, seek });
-
-  //   midiChannel.attachToInstrument({ type, seek /*, limit: 30 */ });
-  // })
 });

@@ -36,4 +36,4 @@ plugin :tmp_restart
 # Heroku metrics
 require 'barnes'
 
-before_fork { Barnes.start }
+before_fork { Barnes.start rescue 'Something crashed in Barnes!' }

@@ -18,7 +18,6 @@ export default class MidiChannel {
   }
 
   on(event, fn) {
-    console.log('on:', event)
     if (!this.callbacks[event]) return;
 
     this.callbacks[event].push(fn);

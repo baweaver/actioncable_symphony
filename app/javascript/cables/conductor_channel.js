@@ -8,6 +8,15 @@ export default class ConductorChannel {
   constructor() {
     this.consumer       = cable.createConsumer();
     this.allAssignments = {};
+    this.callbacks      = {
+      assignment: []
+    };
+  }
+
+  on(event, fn) {
+    if (!this.callbacks[event]) return;
+
+    this.callbacks[event].push(fn);
   }
 
   connect() {
@@ -21,14 +30,20 @@ export default class ConductorChannel {
       },
 
       disconnected(data) {
-        // console.log('disconnected', data);
       },
 
       received({ type, message }) {
         switch (type) {
           case 'allAssignments':
+            klass.callbacks.assignment.forEach(fn => fn(message));
             return klass.allAssignments = message;
+          case 'trackNames':
+            return klass.trackNames = message;
         }
+      },
+
+      getTrackNames() {
+        this.perform('track_names');
       },
 
       assignInstruments() {

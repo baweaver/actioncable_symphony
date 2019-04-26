@@ -17,7 +17,8 @@ Rails.application.routes.draw do
 
   root 'application#client'
 
-  get '/admin', to: 'application#index'
+  # get '/admin', to: 'application#index'
+  get '/admin', to: 'application#admin'
   get '/ze_song', to: 'application#ze_song'
   get '/timesync', to: 'application#timesync'
   post '/timesync', to: 'application#timesync'

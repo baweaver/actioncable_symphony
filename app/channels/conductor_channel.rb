@@ -1,6 +1,9 @@
 class ConductorChannel < ApplicationCable::Channel
   OFFSET = 3_000
 
+  SONG = 'beethoven_6th_midi'
+  # SONG = 'beethoven_9th_midi'
+
   def subscribed
     stream_from channel_name
   end
@@ -16,9 +19,17 @@ class ConductorChannel < ApplicationCable::Channel
     end
   end
 
+  def track_names
+    broadcast(
+      channel: 'conductor_channel::',
+      type:    'trackNames',
+      value:   Midi.available
+    )
+  end
+
   def assign_instruments(data)
     assignments = Midi
-      .get('beethoven_6th_midi')
+      .get(SONG)
       .track_assignments(ConnectedList.all)
 
     # Seperation of concern issue
@@ -27,7 +38,7 @@ class ConductorChannel < ApplicationCable::Channel
     }
 
     broadcast(
-      channel: 'conductor_channel',
+      channel: 'conductor_channel::',
       type:    'allAssignments',
       value:   assignments
     )
@@ -36,7 +47,7 @@ class ConductorChannel < ApplicationCable::Channel
   def buffer_music(message)
     MidiChannel.start_broadcast
 
-    Midi.get('beethoven_6th_midi').tracks.each { |track|
+    Midi.get(SONG).tracks.each { |track|
       MidiChannel.broadcast_track(
         track: track,
         limit: message['limit'],

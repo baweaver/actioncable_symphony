@@ -1,4 +1,29 @@
 module Midi
+  BORING_PARTS = [
+    "Piccolo",
+    "English Horn",
+    "B-flat Clarinets",
+    "Bass Clarinet",
+    "F Horn  Bb",
+    "Trumpeta Bb",
+    "Tuba",
+    "Gran Tamburo",
+    "Cymbal",
+    "Triangle",
+    "Celesta",
+    "Piano",
+    "Harp",
+    "Soprano solo",
+    "Alto solo",
+    "Tenor solo",
+    "Baritono Solo",
+    "Coro",
+    "soprano",
+    "Alto",
+    "Tenor",
+    "Baritono Coro"
+  ]
+
   module Fn
     def self.intercept_if(condition, &fn)
       -> input { condition ? fn[input] : input }
@@ -19,7 +44,7 @@ module Midi
     end
 
     def track_names
-      tracks.map(&:name)
+      tracks.map(&:name) - BORING_PARTS
     end
 
     def tracks
@@ -67,5 +92,9 @@ module Midi
       .then(&File.method(:read))
       .then(&JSON.method(:parse))
       .then(&Instance.method(:new))
+  end
+
+  def self.available
+    Dir['public/*.json'].map { |f| f.split('/').last.split('.').first }
   end
 end

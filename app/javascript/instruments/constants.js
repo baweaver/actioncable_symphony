@@ -10,7 +10,18 @@ export const instrumentImages = {
   "Viola":                "saffron_viola.png" ,
   "Violoncello":          "violet_cello.png",
   "Contrabasso":          "cerulean_bass.png",
+  "Double Basses": "cerulean_bass.png",
+  "Soprano solo": "chartreuse_flute.png",
+  "Alto solo": "periwinkle_clarinet.png",
+  "Tenor solo": "red_trumpet.png",
+  "Baritono Solo": "indigo_bassoon.png",
+  "Coro": "red_trumpet.png",
+  "soprano": "chartreuse_flute.png",
+  "Alto": "periwinkle_clarinet.png",
+  "Tenor": "red_trumpet.png",
+  "Baritono Coro": "violet_cello.png",
 };
+
 
 export const instrumentCommonNames = {
   "Flauti I II":          "Flute",
@@ -24,4 +35,14 @@ export const instrumentCommonNames = {
   "Viola":                "Viola" ,
   "Violoncello":          "Cello",
   "Contrabasso":          "Double Bass",
+  "Double Basses": "Double Bass",
+  "Soprano solo": "Soprano Soloist",
+  "Alto solo": "Alto Soloist",
+  "Tenor solo": "Tenor Soloist",
+  "Baritono Solo": "Baritone Soloist",
+  "Coro": "Chorus",
+  "soprano": "Sopranos",
+  "Alto": "Altos",
+  "Tenor": "Tenors",
+  "Baritono Coro": "Baritones",
 };

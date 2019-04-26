@@ -32,7 +32,7 @@ export const InstrumentCard = ({ instrumentName, clock }) => {
           fontSize: '2.5em',
           padding: '15px'
         }}>
-          <strong>Instrument</strong>: {commonName || 'Awaiting Assignment'}
+          <strong>Instrument</strong>: {commonName || instrumentName || 'Awaiting Assignment'}
         </div>
 
         <ClockDisplay clock={clock} />

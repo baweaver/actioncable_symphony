@@ -29,6 +29,5 @@ export function waitUntil(condition) {
 }
 
 export function waitUntilConnected (channel) {
-  console.log(channel);
   return waitUntil(() => channel.consumer.connection.isOpen());
 }

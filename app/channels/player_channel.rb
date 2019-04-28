@@ -15,11 +15,13 @@ class PlayerChannel < ApplicationCable::Channel
 
   def subscribed
     ConnectedList.add(params[:uuid])
+    ConductorChannel.update_client_counts
     stream_from channel_name
   end
 
   def unsubscribed
     ConnectedList.remove(params[:uuid])
+    ConductorChannel.update_client_counts
     ClientMeta.remove(params[:uuid])
   end
 

@@ -29,7 +29,7 @@ class MidiChannel < ApplicationCable::Channel
       .notes(limit: limit, seek: seek, up_to: up_to)
       .each { |note|
         broadcast(channel: channel, type: 'note', value: note)
-        broadcast(channel: 'midi_channel::all', type: 'note', value: note)
+        broadcast(channel: 'midi_channel::all', type: 'note', value: note.merge(track: track.name))
       }
 
     broadcast(channel: channel, type: 'stopSongBroadcast')

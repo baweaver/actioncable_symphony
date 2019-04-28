@@ -5,6 +5,9 @@ import { Colors } from "@blueprintjs/core";
 
 import { cond, always, is, equals, T } from 'ramda';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClock } from '@fortawesome/free-solid-svg-icons';
+
 const absBetween = (x, y) => (n) => {
   if (!is(Number)) return false;
 
@@ -56,35 +59,18 @@ export class ClockDisplay extends React.Component {
   render() {
     const backgroundColor = offsetColor(this.state.offset);
 
-    return (<div style={{
+    return (<div className="display-4 px-3 py-5" style={{
       color: Colors.LIGHT_GRAY5,
       backgroundColor: backgroundColor,
-      fontSize: '2.5em',
-      padding: '15px'
+      width: '100%'
     }}>
+      <FontAwesomeIcon icon={faClock} /> &nbsp;
+
       <strong>Clock</strong>: &nbsp;
 
       {!this.clock.active && 'Awaiting Assignment'}
 
       {this.clock.active && this.clockDisplay()}
     </div>);
-
-    // return (
-    //   <table border="1" style={{ backgroundColor }}>
-    //     <thead>
-    //       <tr>
-    //         <td width="75%">Current Time</td>
-    //         <td width="25%">Current Offset</td>
-    //       </tr>
-    //     </thead>
-
-    //     <tbody>
-    //       <tr>
-    //         <td>{this.state.now}</td>
-    //         <td>{this.state.offset} ms</td>
-    //       </tr>
-    //     </tbody>
-    //   </table>
-    // );
   }
 }

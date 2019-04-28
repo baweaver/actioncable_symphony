@@ -71,4 +71,12 @@ class ConductorChannel < ApplicationCable::Channel
   def stop
     ConnectedList.all.each { |uuid| PlayerChannel.stop(uuid: uuid) }
   end
+
+  def self.update_client_counts
+    broadcast(
+      channel: 'conductor_channel::',
+      type:    'clientCounts',
+      value:   ConnectedList.all.size
+    )
+  end
 end

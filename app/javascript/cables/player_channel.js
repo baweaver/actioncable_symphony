@@ -20,6 +20,18 @@ export default class PlayerChannel {
     this.isConnected  = true;
 
     this.onInstrument = onInstrument;
+
+    this.callbacks = {
+      songStart: [],
+      songEnd:   [],
+      firstNote: []
+    };
+  }
+
+  on(event, fn) {
+    if (!this.callbacks[event]) return;
+
+    this.callbacks[event].push(fn);
   }
 
   connect() {
@@ -112,7 +124,11 @@ export default class PlayerChannel {
 
     this.tonePlayer.createSynthFromNotes(this.noteQueue, this.clock, atTime);
 
-    waitUntilTime(atTime, this.clock, () => this.tonePlayer.start());
+    // New method, works on the transport sync for better accuracy
+    this.tonePlayer.start(`+${0.5 + atTime - this.clock.now()}`)
+
+    // Old method, introduces some artificial lag
+    // waitUntilTime(atTime, this.clock, () => this.tonePlayer.start());
   }
 
   stop() {

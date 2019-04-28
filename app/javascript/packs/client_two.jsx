@@ -4,14 +4,19 @@ import PropTypes from 'prop-types'
 
 import { uuid } from 'util/uuid'
 
-import ConductorChannel from 'cables/conductor_channel';
 import PlayerChannel from 'cables/player_channel';
 
 import { InstrumentCard } from 'instruments/instrument_card';
 
 import { Clock } from 'timesync/clock';
 
-import { Button, Icon, Navbar, Alignment, Colors } from "@blueprintjs/core";
+import { Colors } from "@blueprintjs/core";
+
+import { Button, Card, Container, Row, Column } from 'react-bootstrap';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import { faPlug, faSpinner, faWifi } from '@fortawesome/free-solid-svg-icons';
 
 const myUuid = uuid();
 
@@ -25,17 +30,24 @@ class Client extends React.Component {
   constructor() {
     super();
 
-    // this.conductorChannel = new ConductorChannel();
     this.playerChannel    = new PlayerChannel({
       uuid:         myUuid,
       clock:        clock,
       onInstrument: instrumentName => this.setState({ instrumentName })
     });
 
+    // this.playerChannel.on('firstNote', ({ time }) => {
+    //   this.setState({ firstNoteTime: time });
+    // })
+
+    // this.playerChannel.on('startSong', (time) => {
+    //   this.setState({ beginTime: time };)
+    // });
+
     this.state = {
       isConnecting:   false,
       isConnected:    false,
-      myUuid:         uuid(),
+      myUuid:         myUuid,
       instrumentName: null,
       clock:          clock
     };
@@ -50,15 +62,12 @@ class Client extends React.Component {
 
     this.setState({ isConnecting: true });
 
-    return Promise.all([
-      // this.conductorChannel.connect(),
-      this.playerChannel.connect()
-    ]).then(() => {
+    return this.playerChannel.connect().then(() => {
       this.setState({
         isConnecting: false,
         isConnected: true
       });
-    })
+    });
   }
 
   subscriptionStatus() {
@@ -70,51 +79,86 @@ class Client extends React.Component {
 
   render() {
     return (
-      <div className="client">
-        <h1 className="bp3-heading">
-          ActionCable Symphony Client &nbsp;
-        </h1>
+      <Container style={{
+        maxWidth:  '100%',
+        minHeight: '100%',
+        height:    '100%',
+      }}>
+        <Row className="bg-primary text-light" style={{
+          borderBottom: `5px solid ${Colors.COBALT1}`
+        }}>
+          <h1 className="display-4 mx-auto my-5">
+            ActionCable Symphony Client
+          </h1>
+        </Row>
 
-        <div>
-          {!this.state.isConnected &&
+        <Row>
+          {!this.state.isConnected && !this.state.isConnecting &&
             <Button onClick={this.handleConnectClick}
-              intent="primary"
-              loading={this.state.isConnecting}
-              icon="feed"
-              large={true}
-              fill={true}
+              variant="primary"
+              size="lg"
+              block
+              style={{
+                fontSize: '2.5em'
+              }}
             >
-              Connect
+              <FontAwesomeIcon icon={faPlug} /> Connect
+            </Button>
+          }
+
+          {this.state.isConnecting &&
+            <Button
+              variant="warning"
+              disabled="disabled"
+              block
+              style={{
+                fontSize: '2.5em'
+              }}
+            >
+              <FontAwesomeIcon icon={faSpinner} spin /> Connecting
             </Button>
           }
 
           {this.state.isConnected &&
             <Button
-              intent="success"
+              variant="success"
               disabled="disabled"
               icon="feed-subscribed"
-              large={true}
-              fill={true}
+              block
+              style={{
+                fontSize: '2.5em'
+              }}
             >
-              Connected
+              <FontAwesomeIcon icon={faWifi} /> Connected
             </Button>
           }
-        </div>
+        </Row>
 
-        <InstrumentCard
-          instrumentName={this.state.instrumentName}
-          clock={clock}
-        />
-
-        <div>{this.state.myUuid}</div>
-      </div>
+        <Row style={{
+          height: '60%'
+        }}>
+          <InstrumentCard
+            instrumentName={this.state.instrumentName}
+            clock={clock}
+          />
+        </Row>
+      </Container>
      );
   }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  const targetElement = document.createElement('div');
+
+  // There are words for this....
+  targetElement.style.cssText = `
+    min-height: 100vh;
+    height: 100vh;
+    width: 100vw;
+  `;
+
   ReactDOM.render(
     <Client name="React" />,
-    document.body.appendChild(document.createElement('div')),
+    document.body.appendChild(targetElement),
   )
 })

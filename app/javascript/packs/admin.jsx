@@ -33,6 +33,12 @@ class Admin extends React.Component {
       });
     });
 
+    this.conductorChannel.on('counts', count => {
+      this.setState({
+        clientsConnected: count
+      })
+    })
+
     this.conductorChannel.connect();
 
     this.midiChannel = new MidiChannel({
@@ -57,7 +63,8 @@ class Admin extends React.Component {
       songLoading:        false,
       assignmentsLoading: false,
       assignmentsReady:   false,
-      assignments:        {}
+      assignments:        {},
+      clientsConnected:   0
     };
   }
 
@@ -143,6 +150,10 @@ class Admin extends React.Component {
       >
         Stop
       </Button>
+
+      <hr/>
+
+      <strong>Clients Connected</strong>: {this.state.clientsConnected}
 
       <hr/>
 

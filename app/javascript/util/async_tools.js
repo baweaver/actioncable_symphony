@@ -10,7 +10,7 @@ export function waitUntilTime(timestamp, clock, action) {
   setTimeout(action, arrivalTime);
 }
 
-export function waitUntil(condition) {
+export function waitUntil(condition, interval = 500) {
   return new Promise((resolve, reject) => {
     const isTimedOut = timedOut(10000);
 
@@ -24,7 +24,7 @@ export function waitUntil(condition) {
         clearInterval(waitInterval);
         return reject('Request timed out!');
       }
-    }, 500);
+    }, interval);
   });
 }
 

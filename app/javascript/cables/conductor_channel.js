@@ -9,7 +9,8 @@ export default class ConductorChannel {
     this.consumer       = cable.createConsumer();
     this.allAssignments = {};
     this.callbacks      = {
-      assignment: []
+      assignment: [],
+      counts:     []
     };
   }
 
@@ -39,6 +40,10 @@ export default class ConductorChannel {
             return klass.allAssignments = message;
           case 'trackNames':
             return klass.trackNames = message;
+          case 'clientCounts':
+            console.log({ counts: message });
+            klass.callbacks.counts.forEach(fn => fn(message));
+            return klass.clientCounts = message;
         }
       },
 

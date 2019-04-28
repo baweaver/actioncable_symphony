@@ -25,7 +25,7 @@ class ClientMeta
   end
 
   def self.set(uid, **attrs)
-    REDIS.mapped_hmset(key(uid), attrs).tap { |v| p response: v }
+    REDIS.mapped_hmset(key(uid), attrs)
   end
 
   def self.get(uid)

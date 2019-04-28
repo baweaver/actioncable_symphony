@@ -4,38 +4,30 @@ import { ClockDisplay } from 'timesync/clock_display';
 
 import { instrumentCommonNames } from 'instruments/constants'
 
-import { Colors, Card, Elevation } from "@blueprintjs/core";
+import { Colors } from "@blueprintjs/core";
 
 import { LemurImage } from 'instruments/lemur_image';
+
+import { Button, Card, Container, Row, Column } from 'react-bootstrap';
 
 export const InstrumentCard = ({ instrumentName, clock }) => {
   const commonName = instrumentCommonNames[instrumentName];
 
   return (
-    <div style={{
-      margin: '15px 0',
-      backgroundColor: Colors.LIGHT_GRAY3
-    }}>
-      <div>
-        <LemurImage instrumentName={instrumentName} />
-      </div>
+    <div style={{ margin: 'auto' }}>
+      <LemurImage instrumentName={instrumentName} />
 
-      {/* Bottom Bar */}
-      <div style={{
-        position: 'fixed',
-        bottom: 0,
-        width: '100%'
-      }}>
-        <div style={{
+      <div className="fixed-bottom" style={{width: '100%'}}>
+        <div className="display-4 py-5 px-3" style={{
           color: Colors.LIGHT_GRAY5,
           backgroundColor: Colors.GRAY1,
-          fontSize: '2.5em',
-          padding: '15px'
+          padding: '15px',
+          width: '100%'
         }}>
           <strong>Instrument</strong>: {commonName || instrumentName || 'Awaiting Assignment'}
         </div>
 
-        <ClockDisplay clock={clock} />
+        <ClockDisplay clock={clock} style={{width: '100%'}}/>
       </div>
     </div>
   )

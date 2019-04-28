@@ -20,7 +20,7 @@ export class Clock {
   start() {
     this.syncronizer = timesync.create({
       server: '/timesync',
-      interval: 20000
+      interval: 5000
     });
 
     const nativeOnChange = this.onChange.bind(this);

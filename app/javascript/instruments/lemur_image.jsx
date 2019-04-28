@@ -2,6 +2,8 @@ import React from 'react'
 import { instrumentImages, instrumentCommonNames } from 'instruments/constants'
 import { Colors } from "@blueprintjs/core";
 
+import { Image, Container, Row, Col } from 'react-bootstrap';
+
 export const LemurImage = ({ instrumentName }) => {
   const imageName = instrumentImages[instrumentName];
   const imagePath = `img/${imageName}`;
@@ -10,8 +12,8 @@ export const LemurImage = ({ instrumentName }) => {
   const maxWidth = 1536;
   const maxHeight = 2048;
 
-  const totalWidth  = maxWidth / 3;
-  const totalHeight = maxHeight / 3;
+  const totalWidth  = maxWidth / 2.5;
+  const totalHeight = maxHeight / 2.5;
 
   // 1536 × 2048
 
@@ -20,23 +22,21 @@ export const LemurImage = ({ instrumentName }) => {
     width: `${totalWidth}px`
   };
 
-  const imageTag = (<img
-    id="current-instrument-image"
+  const imageTag = (<Image
+    className="justify-content-center"
     src={imagePath}
     alt={commonName}
     style={imageStyle}
+    fluid
   />);
 
   const emptyTag = (
-    <div style={{
+    <div className="justify-content-center" style={{
       ...imageStyle,
-      fontSize: '10em',
-      color: Colors.LIGHT_GRAY3,
+      backgroundColor: Colors.LIGHT_GRAY5,
     }}>
-      <h3>?</h3>
     </div>
   );
 
-  return (<div style={{
-  }}>{imageName ? imageTag : emptyTag}</div>);
+  return (<div>{imageName ? imageTag : emptyTag}</div>);
 }

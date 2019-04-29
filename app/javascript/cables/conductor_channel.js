@@ -8,9 +8,14 @@ export default class ConductorChannel {
   constructor() {
     this.consumer       = cable.createConsumer();
     this.allAssignments = {};
+    this.clientMeta     = {};
     this.callbacks      = {
       assignment: [],
-      counts:     []
+      play:       [],
+      stop:       [],
+      buffering:  [],
+      counts:     [],
+      meta:       []
     };
   }
 
@@ -41,9 +46,11 @@ export default class ConductorChannel {
           case 'trackNames':
             return klass.trackNames = message;
           case 'clientCounts':
-            console.log({ counts: message });
             klass.callbacks.counts.forEach(fn => fn(message));
             return klass.clientCounts = message;
+          case 'clientMeta':
+            klass.clientMeta[message.uuid] = message;
+            return klass.callbacks.meta.forEach(fn => fn(Object.values(klass.clientMeta)));
         }
       },
 
@@ -58,14 +65,26 @@ export default class ConductorChannel {
       },
 
       play() {
+        klass.callbacks.play.forEach(fn => {
+          console.log('Callback for play');
+          fn();
+        });
+
         this.perform('play');
       },
 
       stop() {
+        klass.callbacks.stop.forEach(fn => {
+          console.log('Callback for stop');
+          fn();
+        });
+
         this.perform('stop');
       },
 
       bufferMusic() {
+        klass.callbacks.buffering.forEach(fn => fn());
+
         // Hard-coding for now
         this.perform('buffer_music', { upTo: 61.5 });
       }

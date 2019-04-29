@@ -39,8 +39,6 @@ export class ClockDisplay extends React.Component {
   }
 
   componentDidMount() {
-    console.log('Clock mounted');
-
     setInterval(() => {
       if (!this.clock.active) return;
 

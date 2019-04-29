@@ -2,31 +2,35 @@
 // import createChannel from "cables/actioncable";
 
 import cable from 'actioncable';
-import TonePlayer from 'audio/tone_player';
+import MultiTonePlayer from 'audio/multi_tone_player';
 import MidiChannel from 'cables/midi_channel';
 
 import { waitUntilConnected, waitUntilTime } from 'util/async_tools';
 
-export default class PlayerChannel {
-  constructor({ uuid, clock, onInstrument, playAll = false }) {
+export default class DashboardPlayerChannel {
+  constructor({ uuid, clock }) {
     this.consumer    = cable.createConsumer();
     this.uuid        = uuid;
     this.clock       = clock;
-    this.noteQueue   = [];
-    this.cachedNotes = [];
-    this.tonePlayer  = new TonePlayer();
+    this.instrument  = 'all';
+
+    this.noteQueue   = {};
+    this.cachedNotes = {};
+
+    this.tonePlayer  = new MultiTonePlayer();
 
     this.isConnecting = false;
     this.isConnected  = true;
 
-    this.onInstrument = onInstrument;
-
     this.callbacks = {
-      songStart: [],
-      songEnd:   [],
-      firstNote: [],
-      play:      [],
-      stop:      [],
+      songStart:          [],
+      songEnd:            [],
+      firstNote:          [],
+      play:               [],
+      stop:               [],
+      startSongBroadcast: [],
+      stopSongBroadcast:  [],
+      note:               []
     };
   }
 
@@ -54,6 +58,8 @@ export default class PlayerChannel {
         return waitUntilConnected(this).then(() => {
           klass.isConnecting = false;
           klass.isConnected  = true;
+
+          klass.connectMidiChannel();
         });
       },
 
@@ -64,12 +70,11 @@ export default class PlayerChannel {
       received({ type, message }) {
         switch (type) {
           case 'play':
+            klass.callbacks.play.forEach(fn => fn(message));
             return klass.play(message);
           case 'stop':
+            klass.callbacks.stop.forEach(fn => fn(message));
             return klass.stop();
-          case 'instrumentAssignment':
-            this.updateMeta({ ready: false });
-            return klass.connectMidiChannel(message);
         }
       },
 
@@ -85,23 +90,26 @@ export default class PlayerChannel {
     return waitUntilConnected(this.channel);
   }
 
-  connectMidiChannel(instrument) {
-    this.instrument  = instrument;
-
+  connectMidiChannel() {
     this.midiChannel = new MidiChannel({
-      clock: this.clock,
-      instrument: instrument
+      clock:      this.clock,
+      instrument: this.instrument
     });
 
     this.midiChannel.on('startSongBroadcast', () => {
-      this.cachedNotes = [...this.noteQueue];
-      this.noteQueue   = [];
+      this.cachedNotes = {...this.noteQueue};
+      this.noteQueue   = {};
       this.streaming   = true;
       this.midiReady   = false;
+
+      this.callbacks.startSongBroadcast.forEach(fn => fn());
     });
 
     this.midiChannel.on('note', message => {
-      this.noteQueue.push(message);
+      this.noteQueue[message.track] = this.noteQueue[message.track] || [];
+      this.noteQueue[message.track].push(message)
+
+      this.callbacks.note.forEach(fn => fn());
     });
 
     this.midiChannel.on('stopSongBroadcast', () => {
@@ -113,21 +121,22 @@ export default class PlayerChannel {
       this.loadSynth();
 
       this.channel.updateMeta({ ready: true });
+
+      this.callbacks.stopSongBroadcast.forEach(fn => fn());
     });
 
     this.midiChannel.connect().then(() => {
-      this.channel.updateMeta({ instrument });
-      this.onInstrument(instrument);
+      this.channel.updateMeta({ instrument: 'all' });
     });
   }
 
   loadSynth() {
-    if (!this.noteQueue.length) {
-      this.noteQueue   = [...this.cachedNotes];
-      this.cachedNotes = [];
+    if (!Object.keys(this.noteQueue).length) {
+      this.noteQueue   = { ...this.cachedNotes };
+      this.cachedNotes = {};
     }
 
-    this.tonePlayer.createSynthFromNotes(this.noteQueue);
+    this.tonePlayer.createSynthFromTracks(this.noteQueue);
   }
 
   play(atTime) {
@@ -143,8 +152,8 @@ export default class PlayerChannel {
   }
 
   stop() {
-    this.cachedNotes = [...this.noteQueue];
-    this.noteQueue   = [];
+    this.cachedNotes = {...this.noteQueue};
+    this.noteQueue   = {};
 
     this.tonePlayer.stop();
   }

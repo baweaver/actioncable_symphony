@@ -6,6 +6,7 @@ class ConductorChannel < ApplicationCable::Channel
 
   def subscribed
     stream_from channel_name
+    ConductorChannel.update_client_counts
   end
 
   def unsubscribed
@@ -21,7 +22,7 @@ class ConductorChannel < ApplicationCable::Channel
 
   def track_names
     broadcast(
-      channel: 'conductor_channel::',
+      channel: 'conductor_channel::', # Hacks! Hacks!
       type:    'trackNames',
       value:   Midi.available
     )
@@ -38,14 +39,14 @@ class ConductorChannel < ApplicationCable::Channel
     }
 
     broadcast(
-      channel: 'conductor_channel::',
+      channel: 'conductor_channel::', # Hacks! Hacks!
       type:    'allAssignments',
       value:   assignments
     )
   end
 
   def buffer_music(message)
-    MidiChannel.start_broadcast
+    MidiChannel.start_broadcast(message)
 
     Midi.get(SONG).tracks.each { |track|
       MidiChannel.broadcast_track(
@@ -56,7 +57,7 @@ class ConductorChannel < ApplicationCable::Channel
       )
     }
 
-    MidiChannel.stop_broadcast
+    MidiChannel.stop_broadcast(message)
   end
 
   def play
@@ -70,6 +71,14 @@ class ConductorChannel < ApplicationCable::Channel
 
   def stop
     ConnectedList.all.each { |uuid| PlayerChannel.stop(uuid: uuid) }
+  end
+
+  def self.update_meta(uuid, info)
+    broadcast(
+      channel: 'conductor_channel::',
+      type:    'clientMeta',
+      value:   info.merge(uuid: uuid)
+    )
   end
 
   def self.update_client_counts

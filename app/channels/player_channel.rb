@@ -5,12 +5,6 @@ class PlayerChannel < ApplicationCable::Channel
     instrument
     ready
     latency
-    opt_out
-    os
-    os_version
-    browser
-    browser_version
-    is_mobile
   )
 
   def subscribed
@@ -26,9 +20,17 @@ class PlayerChannel < ApplicationCable::Channel
   end
 
   def update_meta(message)
-    new_keys = VALID_META_KEYS.to_h { |k| [k.to_sym, message[k.to_s]] }
+    old_data = ClientMeta.get(params[:uuid]).symbolize_keys
+    new_keys = VALID_META_KEYS.to_h { |k| [k.to_sym, message[k]] }
 
-    ClientMeta.set(params[:uuid], **new_keys)
+    new_data = if old_data.empty?
+      new_keys
+    else
+      old_data.merge!(new_keys.select { |k, v| v.present? })
+    end
+
+    ClientMeta.set(params[:uuid], **new_data)
+    ConductorChannel.update_meta(params[:uuid], new_data)
   end
 
   def receive(message)

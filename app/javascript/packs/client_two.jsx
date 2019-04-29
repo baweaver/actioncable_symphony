@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 
-import { uuid } from 'util/uuid'
+import { uuid } from 'util/uuid';
 
 import PlayerChannel from 'cables/player_channel';
 
@@ -36,20 +36,22 @@ class Client extends React.Component {
       onInstrument: instrumentName => this.setState({ instrumentName })
     });
 
-    // this.playerChannel.on('firstNote', ({ time }) => {
-    //   this.setState({ firstNoteTime: time });
-    // })
+    this.playerChannel.on('firstNote', ({ time }) => {
+      this.setState({ firstNoteTime: time * 1000 });
+    });
 
-    // this.playerChannel.on('startSong', (time) => {
-    //   this.setState({ beginTime: time };)
-    // });
+    this.playerChannel.on('songStart', time => {
+      this.setState({ beginTime: time });
+    });
 
     this.state = {
       isConnecting:   false,
       isConnected:    false,
       myUuid:         myUuid,
       instrumentName: null,
-      clock:          clock
+      clock:          clock,
+      firstNoteTime:  null,
+      beginTime:      null
     };
   }
 
@@ -140,6 +142,8 @@ class Client extends React.Component {
           <InstrumentCard
             instrumentName={this.state.instrumentName}
             clock={clock}
+            firstNoteTime={this.state.firstNoteTime}
+            beginTime={this.state.beginTime}
           />
         </Row>
       </Container>

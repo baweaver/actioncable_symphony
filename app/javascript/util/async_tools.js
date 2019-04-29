@@ -7,7 +7,8 @@ function timedOut (maxWait) {
 export function waitUntilTime(timestamp, clock, action) {
   const arrivalTime = timestamp - clock.now();
 
-  setTimeout(action, arrivalTime);
+  waitUntil(() => clock.now() >= timestamp, 5)
+    .then(() => action());
 }
 
 export function waitUntil(condition, interval = 500) {

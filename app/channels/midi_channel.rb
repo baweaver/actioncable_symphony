@@ -11,11 +11,11 @@ class MidiChannel < ApplicationCable::Channel
     return # nothing for now
   end
 
-  def self.start_broadcast
-    broadcast(channel: 'midi_channel::all', type: 'startSongBroadcast')
+  def self.start_broadcast(message)
+    broadcast(channel: 'midi_channel::all', type: 'startSongBroadcast', value: message)
   end
 
-  def self.stop_broadcast
+  def self.stop_broadcast(message)
     broadcast(channel: 'midi_channel::all', type: 'stopSongBroadcast')
   end
 
@@ -23,7 +23,9 @@ class MidiChannel < ApplicationCable::Channel
     track_name = track.name
     channel    = channel_name(key: track.name)
 
-    broadcast(channel: channel, type: 'startSongBroadcast')
+    broadcast(channel: channel, type: 'startSongBroadcast', value: {
+      limit: limit, seek: seek, upTo: up_to
+    })
 
     track
       .notes(limit: limit, seek: seek, up_to: up_to)

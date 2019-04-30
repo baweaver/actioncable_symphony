@@ -1,4 +1,7 @@
 import Tone from 'tone';
+import { mobileNoteOffset } from 'util/mobile';
+
+const offsetNoteWhenMobile = mobileNoteOffset();
 
 export default class TonePlayer {
   constructor() {
@@ -32,7 +35,7 @@ export default class TonePlayer {
     this.synth.sync();
 
     notes.forEach(({ name, duration, time, velocity }) => {
-      this.synth.triggerAttackRelease(name, duration, time - seek, velocity);
+      this.synth.triggerAttackRelease(offsetNoteWhenMobile(name), duration, time - seek, velocity);
     });
   }
 

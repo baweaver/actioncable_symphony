@@ -57,7 +57,8 @@ class Admin extends React.Component {
 
     this.defaultSongOptions = {
       beethoven_6th_midi: { upTo: 61.5 },
-      beethoven_9th_midi: { seek: 107.5, upTo: 167.5 }
+      beethoven_9th_midi: { seek: 107.5, upTo: 167.5 },
+      beethoven_9th_midi2: { }
     };
 
     this.state = {
@@ -150,6 +151,10 @@ class Admin extends React.Component {
           Beethoven's 9th Symphony
         </option>
 
+        <option value="beethoven_9th_midi2">
+          Beethoven's 9th Symphony (Simple)
+        </option>
+
         <option value="scale">
           Scales
         </option>
@@ -190,6 +195,14 @@ class Admin extends React.Component {
         disabled={!this.state.songPlaying}
       >
         Stop
+      </Button>
+
+      <Button onClick={this.handleStopClick}
+        intent="danger"
+        large={true}
+        icon="stop"
+      >
+        Emergency Stop
       </Button>
 
       <hr/>

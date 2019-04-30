@@ -93,9 +93,12 @@ export default class PlayerChannel {
       instrument: instrument
     });
 
-    this.midiChannel.on('startSongBroadcast', () => {
+    this.midiChannel.on('startSongBroadcast', (meta) => {
       this.cachedNotes = [...this.noteQueue];
       this.noteQueue   = [];
+
+      this.songMeta    = meta;
+
       this.streaming   = true;
       this.midiReady   = false;
     });
@@ -127,7 +130,7 @@ export default class PlayerChannel {
       this.cachedNotes = [];
     }
 
-    this.tonePlayer.createSynthFromNotes(this.noteQueue);
+    this.tonePlayer.createSynthFromNotes(this.noteQueue, this.songMeta);
   }
 
   play(atTime) {

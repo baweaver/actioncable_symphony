@@ -1,0 +1,271 @@
+{
+  "header": {
+    "name": "",
+    "ppq": 960,
+    "meta": [],
+    "tempos": [
+      {
+        "ticks": 0,
+        "bpm": 120
+      }
+    ],
+    "timeSignatures": [
+      {
+        "ticks": 0,
+        "timeSignature": [
+          4,
+          4
+        ],
+        "measures": 0
+      }
+    ]
+  },
+  "tracks": [
+    {
+      "name": "Flauti I II",
+      "channel": 0,
+      "instrument": {
+        "number": 25,
+        "name": "acoustic guitar (steel)",
+        "family": "guitar"
+      },
+      "notes": [
+        {
+          "time": 0,
+          "midi": 40,
+          "name": "E2",
+          "velocity": 0.7480314960629921,
+          "duration": 0.5,
+          "ticks": 0,
+          "durationTicks": 960
+        },
+        {
+          "time": 0.5,
+          "midi": 42,
+          "name": "F#2",
+          "velocity": 0.7480314960629921,
+          "duration": 0.5,
+          "ticks": 960,
+          "durationTicks": 960
+        },
+        {
+          "time": 1,
+          "midi": 44,
+          "name": "G#2",
+          "velocity": 0.7480314960629921,
+          "duration": 0.5,
+          "ticks": 1920,
+          "durationTicks": 960
+        },
+        {
+          "time": 1.5,
+          "midi": 45,
+          "name": "A2",
+          "velocity": 0.7480314960629921,
+          "duration": 0.5,
+          "ticks": 2880,
+          "durationTicks": 960
+        },
+        {
+          "time": 2,
+          "midi": 47,
+          "name": "B2",
+          "velocity": 0.7480314960629921,
+          "duration": 0.5,
+          "ticks": 3840,
+          "durationTicks": 960
+        },
+        {
+          "time": 2.5,
+          "midi": 49,
+          "name": "C#3",
+          "velocity": 0.7480314960629921,
+          "duration": 0.5,
+          "ticks": 4800,
+          "durationTicks": 960
+        },
+        {
+          "time": 3,
+          "midi": 51,
+          "name": "D#3",
+          "velocity": 0.7480314960629921,
+          "duration": 0.5,
+          "ticks": 5760,
+          "durationTicks": 960
+        },
+        {
+          "time": 3.5,
+          "midi": 52,
+          "name": "E3",
+          "velocity": 0.7480314960629921,
+          "duration": 1,
+          "ticks": 6720,
+          "durationTicks": 1920
+        },
+        {
+          "time": 4.5,
+          "midi": 51,
+          "name": "D#3",
+          "velocity": 0.7480314960629921,
+          "duration": 0.5,
+          "ticks": 8640,
+          "durationTicks": 960
+        },
+        {
+          "time": 5,
+          "midi": 49,
+          "name": "C#3",
+          "velocity": 0.7480314960629921,
+          "duration": 0.5,
+          "ticks": 9600,
+          "durationTicks": 960
+        },
+        {
+          "time": 5.5,
+          "midi": 47,
+          "name": "B2",
+          "velocity": 0.7480314960629921,
+          "duration": 0.5,
+          "ticks": 10560,
+          "durationTicks": 960
+        },
+        {
+          "time": 6,
+          "midi": 45,
+          "name": "A2",
+          "velocity": 0.7480314960629921,
+          "duration": 0.5,
+          "ticks": 11520,
+          "durationTicks": 960
+        },
+        {
+          "time": 6.5,
+          "midi": 44,
+          "name": "G#2",
+          "velocity": 0.7480314960629921,
+          "duration": 0.5,
+          "ticks": 12480,
+          "durationTicks": 960
+        },
+        {
+          "time": 7,
+          "midi": 42,
+          "name": "F#2",
+          "velocity": 0.7480314960629921,
+          "duration": 0.5,
+          "ticks": 13440,
+          "durationTicks": 960
+        },
+        {
+          "time": 7.5,
+          "midi": 40,
+          "name": "E2",
+          "velocity": 0.7480314960629921,
+          "duration": 1,
+          "ticks": 14400,
+          "durationTicks": 1920
+        }
+      ],
+      "controlChanges": {
+        "7": [
+          {
+            "number": 7,
+            "value": 1,
+            "time": 0,
+            "ticks": 0
+          },
+          {
+            "number": 7,
+            "value": 1,
+            "time": 0,
+            "ticks": 0
+          }
+        ],
+        "10": [
+          {
+            "number": 10,
+            "value": 0.5039370078740157,
+            "time": 0,
+            "ticks": 0
+          },
+          {
+            "number": 10,
+            "value": 0.5039370078740157,
+            "time": 0,
+            "ticks": 0
+          }
+        ],
+        "11": [
+          {
+            "number": 11,
+            "value": 1,
+            "time": 0,
+            "ticks": 0
+          },
+          {
+            "number": 11,
+            "value": 1,
+            "time": 0,
+            "ticks": 0
+          }
+        ],
+        "91": [
+          {
+            "number": 91,
+            "value": 0,
+            "time": 0,
+            "ticks": 0
+          },
+          {
+            "number": 91,
+            "value": 0,
+            "time": 0,
+            "ticks": 0
+          }
+        ],
+        "92": [
+          {
+            "number": 92,
+            "value": 0,
+            "time": 0,
+            "ticks": 0
+          },
+          {
+            "number": 92,
+            "value": 0,
+            "time": 0,
+            "ticks": 0
+          }
+        ],
+        "93": [
+          {
+            "number": 93,
+            "value": 0,
+            "time": 0,
+            "ticks": 0
+          },
+          {
+            "number": 93,
+            "value": 0,
+            "time": 0,
+            "ticks": 0
+          }
+        ],
+        "95": [
+          {
+            "number": 95,
+            "value": 0,
+            "time": 0,
+            "ticks": 0
+          },
+          {
+            "number": 95,
+            "value": 0,
+            "time": 0,
+            "ticks": 0
+          }
+        ]
+      }
+    }
+  ]
+}

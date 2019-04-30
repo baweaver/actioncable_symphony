@@ -20,13 +20,19 @@ export default class TonePlayer {
     }).toMaster();
   }
 
-  createSynthFromNotes(notes) {
+  createSynthFromNotes(notes, meta) {
+    let seek = 0;
+
+    if (meta && meta.options && meta.options.seek) {
+      seek = meta.options.seek || 0;
+    }
+
     this.stop();
     this.synth = this.createSynth();
     this.synth.sync();
 
     notes.forEach(({ name, duration, time, velocity }) => {
-      this.synth.triggerAttackRelease(name, duration, time, velocity);
+      this.synth.triggerAttackRelease(name, duration, time - seek, velocity);
     });
   }
 

@@ -16,7 +16,13 @@ export default class MultiTonePlayer {
     }).toMaster();
   }
 
-  createSynthFromTracks(tracks) {
+  createSynthFromTracks(tracks, meta = {}) {
+    let seek = 0;
+
+    if (meta && meta.options && meta.options.seek) {
+      seek = meta.options.seek || 0;
+    }
+
     this.stop();
 
     Object.keys(tracks).forEach(trackName => {
@@ -24,7 +30,7 @@ export default class MultiTonePlayer {
       synth.sync();
 
       tracks[trackName].forEach(({ name, duration, time, velocity }) => {
-        synth.triggerAttackRelease(name, duration, time, velocity);
+        synth.triggerAttackRelease(name, duration, time - seek, velocity);
       });
 
       this.synths.push(synth);
@@ -32,7 +38,8 @@ export default class MultiTonePlayer {
   }
 
   start() {
-    return Tone.Transport.start();
+    const transport = Tone.Transport;
+    return transport.start();
   }
 
   stop(atTime) {

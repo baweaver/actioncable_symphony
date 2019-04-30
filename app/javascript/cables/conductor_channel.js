@@ -58,35 +58,24 @@ export default class ConductorChannel {
         this.perform('track_names');
       },
 
-      assignInstruments() {
-        this.perform('assign_instruments', {
-          // Nothing for now, add dynamics in later
-        });
+      assignInstruments({ song, options }) {
+        this.perform('assign_instruments', { song, options });
       },
 
-      play() {
-        klass.callbacks.play.forEach(fn => {
-          console.log('Callback for play');
-          fn();
-        });
-
-        this.perform('play');
+      play({ song, options }) {
+        this.perform('play', { song, options });
       },
 
       stop() {
-        klass.callbacks.stop.forEach(fn => {
-          console.log('Callback for stop');
-          fn();
-        });
-
         this.perform('stop');
       },
 
-      bufferMusic() {
+      bufferMusic({ song, options }) {
         klass.callbacks.buffering.forEach(fn => fn());
 
         // Hard-coding for now
-        this.perform('buffer_music', { upTo: 61.5 });
+        // this.perform('buffer_music', { upTo: 61.5 });
+        this.perform('buffer_music', { song, options });
       }
     });
 

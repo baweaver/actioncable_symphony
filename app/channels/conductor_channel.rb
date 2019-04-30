@@ -28,9 +28,11 @@ class ConductorChannel < ApplicationCable::Channel
     )
   end
 
-  def assign_instruments(data)
+  def assign_instruments(message)
+    song_name = message.fetch('song', SONG)
+
     assignments = Midi
-      .get(SONG)
+      .get(song_name)
       .track_assignments(ConnectedList.all)
 
     # Seperation of concern issue
@@ -48,12 +50,14 @@ class ConductorChannel < ApplicationCable::Channel
   def buffer_music(message)
     MidiChannel.start_broadcast(message)
 
-    Midi.get(SONG).tracks.each { |track|
+    song_name = message.fetch('song', SONG)
+
+    Midi.get(song_name).tracks.each { |track|
       MidiChannel.broadcast_track(
         track: track,
-        limit: message['limit'],
-        seek:  message['seek'],
-        up_to: message['upTo']
+        limit: message.dig('options', 'limit'),
+        seek:  message.dig('options', 'seek'),
+        up_to: message.dig('options', 'upTo')
       )
     }
 

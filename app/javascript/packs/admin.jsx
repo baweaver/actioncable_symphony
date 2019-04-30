@@ -55,6 +55,11 @@ class Admin extends React.Component {
 
     this.midiChannel.connect();
 
+    this.defaultSongOptions = {
+      beethoven_6th_midi: { upTo: 61.5 },
+      beethoven_9th_midi: { seek: 107.5, upTo: 167.5 }
+    };
+
     this.state = {
       clock:              clock,
       isAssigning:        false,
@@ -64,7 +69,8 @@ class Admin extends React.Component {
       assignmentsLoading: false,
       assignmentsReady:   false,
       assignments:        {},
-      clientsConnected:   0
+      clientsConnected:   0,
+      song:               'beethoven_6th_midi'
     };
   }
 
@@ -72,17 +78,29 @@ class Admin extends React.Component {
 
   handleAssignmentClick = () => {
     this.setState({ assignmentsLoading: false, assignmentsReady: false });
-    this.conductorChannel.channel.assignInstruments();
+
+    const song = this.state.song;
+    this.conductorChannel.channel.assignInstruments({
+      song, options: this.defaultSongOptions[song]
+    });
   }
 
   handleBufferClick = () => {
     this.setState({ songLoading: false, songReady: false });
-    this.conductorChannel.channel.bufferMusic();
+
+    const song = this.state.song;
+    this.conductorChannel.channel.bufferMusic({
+      song, options: this.defaultSongOptions[song]
+    });
   };
 
   handlePlayClick = () => {
     this.setState({ songPlaying: true });
-    this.conductorChannel.channel.play();
+
+    const song = this.state.song;
+    this.conductorChannel.channel.play({
+      song, options: this.defaultSongOptions[song]
+    });
   };
 
   handleStopClick = () => {
@@ -110,9 +128,32 @@ class Admin extends React.Component {
     </table>);
   }
 
+  onSongChange(event) {
+    this.setState({
+      song: event.target.value
+    });
+  }
+
   render() {
     return (<div>
       <h1>Administrator</h1>
+
+      <select className="custom-select"
+        onChange={this.onSongChange.bind(this)}
+        value={this.state.song}
+      >
+        <option value="beethoven_6th_midi">
+          Beethoven's 6th Symphony
+        </option>
+
+        <option value="beethoven_9th_midi">
+          Beethoven's 9th Symphony
+        </option>
+
+        <option value="scale">
+          Scales
+        </option>
+      </select>
 
       <Button onClick={this.handleAssignmentClick}
         intent="primary"

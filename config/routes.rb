@@ -17,7 +17,7 @@ Rails.application.routes.draw do
 
   root 'application#client'
 
-  get '/admin', to: 'application#admin'
+  get '/super_secret_admin_place', to: 'application#admin'
   get '/dashboard', to: 'application#dashboard'
 
   get '/ze_song', to: 'application#ze_song'

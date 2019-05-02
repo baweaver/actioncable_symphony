@@ -37,7 +37,7 @@ class ConductorChannel < ApplicationCable::Channel
 
     latency = -> uuid { client_meta.dig(uuid, 'latency').to_f.abs }
 
-    good_clients = clients.select { |uuid| latenct[uuid] < BAD_PING }
+    good_clients = clients.select { |uuid| latency[uuid] < BAD_PING }
 
     assignments = Midi
       .get(song_name)

@@ -1,6 +1,6 @@
 class ConductorChannel < ApplicationCable::Channel
   OFFSET   = 5_000
-  BAD_PING = 5_000
+  BAD_PING = 5.00
 
   SONG = 'beethoven_6th_midi'
   # SONG = 'beethoven_9th_midi'

@@ -61,7 +61,7 @@ export const InstrumentCard = ({ instrumentName, clock, firstNoteTime, beginTime
       <LemurImage instrumentName={instrumentName} />
 
       <div className="fixed-bottom" style={{width: '100%'}}>
-        {clock.offset < 5000 && (
+        {Math.abs(clock.offset) < 5.0 && (
           <div className="display-4 py-5 px-3" style={{
             color: Colors.LIGHT_GRAY5,
             backgroundColor: Colors.GRAY1,
@@ -79,7 +79,7 @@ export const InstrumentCard = ({ instrumentName, clock, firstNoteTime, beginTime
           </div>
         )}
 
-        {clock.offset >= 5000 && (
+        {Math.abs(clock.offset) >= 5.0 && (
           <div className="display-4 py-5 px-3" style={{
             color: Colors.LIGHT_GRAY5,
             backgroundColor: Colors.RED3,

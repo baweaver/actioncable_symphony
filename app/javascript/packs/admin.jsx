@@ -197,12 +197,24 @@ class Admin extends React.Component {
         Stop
       </Button>
 
+      <br/>
+
+      <hr/>
+
       <Button onClick={this.handleStopClick}
         intent="danger"
         large={true}
         icon="stop"
       >
         Emergency Stop
+      </Button>
+
+      <Button onClick={this.handlePlayClick}
+        intent="success"
+        large={true}
+        icon="play"
+      >
+        Emergency Play
       </Button>
 
       <hr/>

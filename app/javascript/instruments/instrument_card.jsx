@@ -61,21 +61,34 @@ export const InstrumentCard = ({ instrumentName, clock, firstNoteTime, beginTime
       <LemurImage instrumentName={instrumentName} />
 
       <div className="fixed-bottom" style={{width: '100%'}}>
-        <div className="display-4 py-5 px-3" style={{
-          color: Colors.LIGHT_GRAY5,
-          backgroundColor: Colors.GRAY1,
-          padding: '15px',
-          width: '100%'
-        }}>
-          <strong>Instrument</strong>: {commonName || instrumentName || 'Awaiting Assignment'}
+        {clock.offset < 5000 && (
+          <div className="display-4 py-5 px-3" style={{
+            color: Colors.LIGHT_GRAY5,
+            backgroundColor: Colors.GRAY1,
+            padding: '15px',
+            width: '100%'
+          }}>
+            <strong>Instrument</strong>: {commonName || instrumentName || 'Awaiting Assignment'}
 
-          {beginTime &&
-            <CountdownToPlaying
-              clock={clock}
-              firstNoteTime={firstNoteTime}
-              beginTime={beginTime}
-            />}
-        </div>
+            {beginTime &&
+              <CountdownToPlaying
+                clock={clock}
+                firstNoteTime={firstNoteTime}
+                beginTime={beginTime}
+              />}
+          </div>
+        )}
+
+        {clock.offset >= 5000 && (
+          <div className="display-4 py-5 px-3" style={{
+            color: Colors.LIGHT_GRAY5,
+            backgroundColor: Colors.RED3,
+            padding: '15px',
+            width: '100%'
+          }}>
+            <strong>Instrument</strong>: Can't assign (lag)
+          </div>
+        )}
 
         <ClockDisplay clock={clock} style={{width: '100%'}}/>
       </div>

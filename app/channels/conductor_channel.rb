@@ -1,5 +1,6 @@
 class ConductorChannel < ApplicationCable::Channel
-  OFFSET = 3_000
+  OFFSET   = 5_000
+  BAD_PING = 5_000
 
   SONG = 'beethoven_6th_midi'
   # SONG = 'beethoven_9th_midi'
@@ -31,9 +32,16 @@ class ConductorChannel < ApplicationCable::Channel
   def assign_instruments(message)
     song_name = message.fetch('song', SONG)
 
+    client_meta = ClientMeta.all.index_by { |m| m['uuid'] }
+    clients     = ConnectedList.all
+
+    latency = -> uuid { client_meta.dig(uuid, 'latency').to_f.abs }
+
+    good_clients = clients.select { |uuid| latenct[uuid] < BAD_PING }
+
     assignments = Midi
       .get(song_name)
-      .track_assignments(ConnectedList.all)
+      .track_assignments(good_clients)
 
     # Seperation of concern issue
     assignments.each { |uuid, instrument|

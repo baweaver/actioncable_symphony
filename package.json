@@ -11,7 +11,7 @@
     "babel-preset-react": "^6.24.1",
     "bulma": "0.7.4",
     "jquery": "",
-    "moment": "2.24.0",
+    "moment": "2.29.2",
     "prop-types": "^15.7.2",
     "ramda": "0.26.1",
     "react": "^16.8.6",
